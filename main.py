@@ -44,12 +44,12 @@ class QueueFrontire(Frontire[T]):
 
 class Block(Enum):
     WALL = "#"
-    ROAD = " "
-    START = "A"
-    GOAL = "B"
+    ROAD = "."
+    START = "@"
+    GOAL = "$"
     # for visual only
     EXPLORED = "*"
-    PATH = "p"
+    PATH = "+"
 
 
 class Action(Enum):
@@ -192,8 +192,8 @@ class MazeSolver:
     def _actions(self, node: Node) -> list[Action]:
         actions: set[Action] = set()
         valid_blocks: set[Block] = {
-            Block(" "),
-            Block("B"),
+            Block.GOAL,
+            Block.ROAD,
         }
         state = node.state
         if (state[1] - 1) >= 0 and self.maze[state[0]][state[1] - 1] in valid_blocks:
@@ -243,7 +243,7 @@ class MazeParser:
         for line in file.readlines():
             blockLine: list[Block] = []
             for char in line:
-                if char == "\n":
+                if char.isspace():
                     continue
                 blockLine.append(Block(char))
             maze.append(tuple(blockLine))
@@ -251,9 +251,9 @@ class MazeParser:
 
 
 def main():
-    with open("maze.txt") as mazeFile:
+    with open("maze1.txt") as mazeFile:
         maze = MazeParser.parseFile(mazeFile)
-        solver = MazeSolver(QueueFrontire(), maze)
+        solver = MazeSolver(StackFrontire(), maze)
         path = solver.solve()
         maze_printer = MazePrinter(maze)
         image = maze_printer.create_image(explored=solver.explored, path=path)

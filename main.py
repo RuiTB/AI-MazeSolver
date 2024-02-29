@@ -251,7 +251,7 @@ class MazeParser:
 
 
 def main():
-    with open("maze1.txt") as mazeFile:
+    with open("maze3.txt") as mazeFile:
         maze = MazeParser.parseFile(mazeFile)
         solver = MazeSolver(StackFrontire(), maze)
         path = solver.solve()

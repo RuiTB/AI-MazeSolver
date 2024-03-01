@@ -75,11 +75,6 @@ class MazePrinter:
         self.height = len(maze)
         self.width = len(maze[0])
 
-    def __repr__(self):
-        return "\n".join(
-            "".join(str(block.value) for block in row) for row in self.maze
-        )
-
     def _maze_with_explored(self, explored: set[tuple[int]], maze: Maze) -> Maze:
         new_maze: list[tuple[Block]] = []
         for i, row in enumerate(maze):
@@ -253,7 +248,7 @@ class MazeParser:
 def main():
     with open("maze3.txt") as mazeFile:
         maze = MazeParser.parseFile(mazeFile)
-        solver = MazeSolver(StackFrontire(), maze)
+        solver = MazeSolver(QueueFrontire(), maze)
         path = solver.solve()
         maze_printer = MazePrinter(maze)
         image = maze_printer.create_image(explored=solver.explored, path=path)
